@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Here we will schedule the observable to observer
         //in textChangeEvents value is emitted immediately on subscribe
+
+        //disposable is like an observable
         _disposable = RxJavaInterop.toV2Observable(RxTextView.textChangeEvents(input))
                 .debounce(400, TimeUnit.MILLISECONDS)// default Scheduler is Computation
                 .filter(changes -> isNotNullOrEmpty(input.getText().toString()))
