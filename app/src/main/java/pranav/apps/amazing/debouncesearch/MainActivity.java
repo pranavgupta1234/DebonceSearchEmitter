@@ -29,6 +29,8 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subscribers.DisposableSubscriber;
 import timber.log.Timber;
 
+import static java.lang.String.format;
+
 public class MainActivity extends AppCompatActivity {
 
     private LogAdapter _logAdapter;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText input;
 
     private ListView _logView;
-    private List<CharSequence> _logs;
+    private List<String> _logs;
 
     private ImageButton clr;
 
@@ -96,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
               observer is a disposable subscriber to  textchange so will receive similar thing as argument
             * */
             public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
-                _log("Searching for "+ textViewTextChangeEvent.text().toString()+"\n");
+                _log(format("Searching for %s",textViewTextChangeEvent.text().toString()));
+                //_log("Searching for "+ textViewTextChangeEvent.text().toString()+"\n");
 
             }
 
@@ -123,16 +126,16 @@ public class MainActivity extends AppCompatActivity {
     private void _log(String logMsg) {
 
         if (_isCurrentlyOnMainThread()) {
-            _logs.add(0, logMsg + " (main thread) ");
+            _logs.add(0, logMsg + " (main thread)\n");
             _logAdapter.clear();
-            _logAdapter.addAll(_logs.toString());
+            _logAdapter.addAll(_logs);
         } else {
-            _logs.add(0, logMsg + " (NOT main thread) ");
+            _logs.add(0, logMsg + " (NOT main thread)\n");
 
             // You can only do below stuff on main thread.
             new Handler(Looper.getMainLooper()).post(() -> {
                 _logAdapter.clear();
-                _logAdapter.addAll(_logs.toString());
+                _logAdapter.addAll(_logs);
             });
         }
     }
